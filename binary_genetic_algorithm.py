@@ -4,8 +4,10 @@
 
 
 import numpy as np
+from numba import jit
 
 
+@jit
 def generate(pop_size, chrom_length):
     '''
     Inputs:
@@ -34,9 +36,10 @@ def generate(pop_size, chrom_length):
 
     assert pop_size < (1 << chrom_length)  # 2 ** chrom_length
 
-    return np.random.randint(0, 2, size=(pop_size, chrom_length), dtype=np.bool)
+    return np.random.randint(low=0, high=2, size=(pop_size, chrom_length)).astype(np.bool)
 
 
+@jit
 def select(population, scores, indexes):
     '''
     Inputs:
@@ -74,6 +77,7 @@ def select(population, scores, indexes):
     return population[indexes]
 
 
+@jit
 def mutate(population, mut_prob):
     '''
     Inputs:
@@ -102,6 +106,7 @@ def mutate(population, mut_prob):
     return population ^ bits_to_mutate
 
 
+@jit
 def crossover(population, crs_prob, bits):
     '''
     Inputs:
@@ -143,7 +148,7 @@ def crossover(population, crs_prob, bits):
     # Each chromosome must contribute at least one bit
 
     # Set a single crossover bit for each pair of chromosomes
-    breakpoints = np.random.randint(1, cols, size=(rows, 1), dtype=np.uint)
+    breakpoints = np.random.randint(low=1, high=cols, size=(rows, 1)).astype(np.uint)
 
     # Divide each sequence of bits into two parts
     positions = bits < breakpoints
@@ -154,9 +159,10 @@ def crossover(population, crs_prob, bits):
     return np.concatenate((
         (population[0::2] &  positions) | (population[1::2] & ~positions),
         (population[0::2] & ~positions) | (population[1::2] &  positions)
-    ))
+    ), axis=0)
 
 
+@jit(nopython=False, cache=True, parallel=False)
 def run(fit_func,
         crs_prob,
         mut_prob,
