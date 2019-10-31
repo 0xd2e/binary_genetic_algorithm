@@ -1,0 +1,38 @@
+# Created with aid of https://www.gitignore.io/
+
+### Git ###
+*.orig
+
+### Linux ###
+*~
+
+# Temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+### Python ###
+__pycache__/
+.mypy_cache/
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+### VisualStudioCode ###
+.vscode/
+
+### Windows ###
+
+# Windows thumbnail cache files
+Thumbs.db
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
