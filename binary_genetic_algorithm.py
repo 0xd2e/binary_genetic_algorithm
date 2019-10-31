@@ -34,7 +34,8 @@ def generate(pop_size, chrom_length):
     of chromosomes (solution candidates).
     """
 
-    assert pop_size < (1 << chrom_length)  # 2 ** chrom_length
+    if pop_size >= (1 << chrom_length):
+        raise ValueError('Population must be smaller than overall unique chromosome sequences.')
 
     return np.random.randint(low=0, high=2, size=(pop_size, chrom_length)).astype(np.bool)
 
@@ -233,13 +234,19 @@ def run(fit_func,
     Returns a chromosome (1D numpy boolean array).
     """
 
-    assert (pop_size % 2) is 0
-    assert (crs_prob > 0) and (crs_prob < 1)
-    assert (mut_prob > 0) and (mut_prob < 1)
-    assert (threshold >= 0) and (threshold <= 1)
+    if pop_size & 1:
+        raise ValueError('Total amount of chromosomes in a population must be an even number.')
+    if (crs_prob <= 0) or (crs_prob >= 1):
+        raise ValueError('Crossover probability must be a number between 0.0 and 1.0 (exclusive).')
+    if (mut_prob <= 0) or (mut_prob >= 1):
+        raise ValueError('Mutation probability must be a number between 0.0 and 1.0 (exclusive).')
+    if 1 < threshold < 0:
+        raise ValueError('Threshold must be a number between 0.0 and 1.0 (inclusive).')
 
     if fit_args is None:
         fit_args = []
+    elif not isinstance(fit_args, (list, tuple)):
+        raise TypeError('Additional fitness argument(s) must be placed in a list or tuple.')
 
     # Create initial population and calculate corresponding fitness values
     population = generate(pop_size, chrom_length)
