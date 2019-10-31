@@ -1,0 +1,158 @@
+# https://pylint.readthedocs.io/en/latest/technical_reference/features.html
+
+[MASTER]
+
+# Profiled execution.
+profile=no
+
+# Add files or directories matching the patterns to the blacklist.
+ignorePatterns=
+    **/__pycache__/
+    **/.git/
+    **/.vscode/
+    **/site-packages/
+
+# Pickle collected data for later comparisons.
+persistent=no
+
+# Use multiple processes to speed up Pylint. Specifying 0 will
+# auto-detect the number of processors available to use.
+jobs=1
+
+# Allow loading of arbitrary C extensions. Extensions are imported
+# into the active Python interpreter and may run arbitrary code.
+unsafe-load-any-extension=no
+
+[MESSAGES CONTROL]
+
+# Disable the message, report, category or checker with the given id(s).
+disable=W0402,W0703,W0232,R0201,R0903,C0103,C0114,C0116
+
+# http://pylint-messages.wikidot.com/all-codes
+# http://pylint-messages.wikidot.com/all-messages
+
+# W0402 = Uses of a deprecated module
+# W0703 = Catching too general exception
+# W0232 = Class has no __init__ method
+# R0201 = Method could be a function
+# R0903 = Too few public methods
+# C0103 = Invalid name
+# C0114 = Missing module docstring
+# C0116 = Missing function or method docstring
+
+# R0801 = Similar lines in files
+# R0901 = Too many ancestors
+# R0902 = Too many instance attributes
+# R0904 = Too many public methods
+
+[REPORTS]
+
+# Set the output format.
+# Available formats are: text, parseable, colorized, json, msvs, html.
+output-format=text
+
+# Include message's id in output.
+include-ids=no
+
+# Put messages in a separate file for each module / package specified
+# on the command line instead of printing them on stdout.
+files-output=no
+
+# Tells whether to display a full report or only the messages.
+reports=no
+
+[LOGGING]
+
+# Logging modules to check that the string format arguments
+# are in logging function parameter format.
+logging-modules=logging
+
+[SIMILARITIES]
+
+# Minimum lines number of a similarity.
+min-similarity-lines=4
+
+# Ignore comments when computing similarities.
+ignore-comments=yes
+
+# Ignore docstrings when computing similarities.
+ignore-docstrings=yes
+
+# Ignore imports when computing similarities.
+ignore-imports=yes
+
+[FORMAT]
+
+# Maximum number of characters on a single line.
+max-line-length=100
+
+# Allow the body of an if to be on the same line as the test if there is no else.
+single-line-if-stmt=no
+
+# Allow the body of a class to be on the same line as the declaration
+# if body contains single statement.
+single-line-class-stmt=no
+
+# Maximum number of lines in a module.
+max-module-lines=1000
+
+# String used as indentation unit.
+indent-string='    '
+
+# Number of spaces of indent required inside a hanging or continued line.
+indent-after-paren=4
+
+[VARIABLES]
+
+# Tells whether we should check for unused import in __init__.py files.
+init-import=yes
+
+[MISCELLANEOUS]
+
+# List of note tags to take in consideration, separated by a comma.
+notes=FIXME,XXX,TODO
+
+[BASIC]
+
+# Include a hint for the correct naming format with invalid-name.
+include-naming-hint=no
+
+# Minimum line length for functions/classes that require docstrings, shorter ones are exempt.
+docstring-min-length=4
+
+[ELIF]
+
+# Maximum number of nested blocks for function / method body.
+max-nested-blocks=5
+
+[DESIGN]
+
+# Maximum number of arguments for function / method.
+max-args=9
+
+# Maximum number of locals for function / method body.
+max-locals=17
+
+# Maximum number of return / yield for function / method body.
+max-returns=5
+
+# Maximum number of branch for function / method body.
+max-branches=12
+
+# Maximum number of statements in function / method body.
+max-statements=50
+
+# Maximum number of parents for a class (see R0901).
+max-parents=5
+
+# Maximum number of attributes for a class (see R0902).
+max-attributes=7
+
+# Minimum number of public methods for a class (see R0903).
+min-public-methods=2
+
+# Maximum number of public methods for a class (see R0904).
+max-public-methods=20
+
+# Maximum number of boolean expressions in an if statement.
+max-bool-expr=5
