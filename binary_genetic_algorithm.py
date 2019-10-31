@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-'''Binary genetic algorithm engine'''
+"""Binary genetic algorithm engine"""
 
 
 import numpy as np
@@ -9,7 +9,7 @@ from numba import jit
 
 @jit
 def generate(pop_size, chrom_length):
-    '''
+    """
     Inputs:
 
     pop_size
@@ -32,7 +32,7 @@ def generate(pop_size, chrom_length):
 
     Returns nested (2D) numpy boolean array, the entire population
     of chromosomes (solution candidates).
-    '''
+    """
 
     assert pop_size < (1 << chrom_length)  # 2 ** chrom_length
 
@@ -41,7 +41,7 @@ def generate(pop_size, chrom_length):
 
 @jit
 def select(population, scores, indexes):
-    '''
+    """
     Inputs:
 
     population
@@ -66,7 +66,7 @@ def select(population, scores, indexes):
 
     Returns nested (2D) numpy boolean array, the entire next generation of chromosomes
     (solution candidates) chosen with repetition from a given population.
-    '''
+    """
 
     probabilities = scores / np.sum(scores)
 
@@ -79,7 +79,7 @@ def select(population, scores, indexes):
 
 @jit
 def mutate(population, mut_prob):
-    '''
+    """
     Inputs:
 
     population
@@ -98,7 +98,7 @@ def mutate(population, mut_prob):
 
     Returns nested (2D) numpy boolean array, the entire population of chromosomes
     (solution candidates) with randomly altered bits.
-    '''
+    """
 
     bits_to_mutate = np.random.uniform(size=population.shape) < mut_prob
 
@@ -108,7 +108,7 @@ def mutate(population, mut_prob):
 
 @jit
 def crossover(population, crs_prob, bits):
-    '''
+    """
     Inputs:
 
     population
@@ -132,7 +132,7 @@ def crossover(population, crs_prob, bits):
 
     Returns nested (2D) numpy boolean array, the entire population of chromosomes
     (solution candidates) where random chromosome pairs swapped their binary pattern.
-    '''
+    """
 
     # Each row represents a pair of chromosomes
     # Each column represents specific bit
@@ -171,7 +171,7 @@ def run(fit_func,
         iterations,
         fit_args=None,
         threshold=1.0):
-    '''
+    """
     Inputs:
 
     fit_func
@@ -231,7 +231,7 @@ def run(fit_func,
 
 
     Returns a chromosome (1D numpy boolean array).
-    '''
+    """
 
     assert (pop_size % 2) is 0
     assert (crs_prob > 0) and (crs_prob < 1)
