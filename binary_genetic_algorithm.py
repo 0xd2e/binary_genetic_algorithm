@@ -4,10 +4,8 @@
 
 
 import numpy as np
-from numba import jit
 
 
-@jit
 def generate(pop_size, chrom_length):
     """
     Inputs:
@@ -40,7 +38,6 @@ def generate(pop_size, chrom_length):
     return np.random.randint(low=0, high=2, size=(pop_size, chrom_length)).astype(np.bool)
 
 
-@jit
 def select(population, scores, indexes):
     """
     Inputs:
@@ -78,7 +75,6 @@ def select(population, scores, indexes):
     return population[indexes]
 
 
-@jit
 def mutate(population, mut_prob):
     """
     Inputs:
@@ -107,7 +103,6 @@ def mutate(population, mut_prob):
     return population ^ bits_to_mutate
 
 
-@jit
 def crossover(population, crs_prob, bits):
     """
     Inputs:
@@ -163,7 +158,6 @@ def crossover(population, crs_prob, bits):
     ), axis=0)
 
 
-@jit(nopython=False, cache=True, parallel=False)
 def run(fit_func,
         crs_prob,
         mut_prob,
