@@ -6,7 +6,7 @@
 import numpy as np
 
 
-def generate(pop_size, chrom_length):
+def generate(pop_size, chrom_length, threshold=0.5):
     """
     Inputs:
 
@@ -18,6 +18,11 @@ def generate(pop_size, chrom_length):
     -- positive integer number
     -- number of bits in a chromosome
     -- length of a chromosome
+
+    threshold
+    -- real number between 0.0 and 1.0 (default is 0.5)
+    -- values (from uniform distribution) lower than this number
+       translate to True values in chromosomes
 
 
     Each chromosome is represented as a fixed length 1D numpy array
@@ -35,7 +40,7 @@ def generate(pop_size, chrom_length):
     if pop_size >= (1 << chrom_length):
         raise ValueError('Population must be smaller than overall unique chromosome sequences.')
 
-    return np.random.randint(low=0, high=2, size=(pop_size, chrom_length)).astype(np.bool)
+    return np.random.uniform(size=(pop_size, chrom_length)) < threshold
 
 
 def select(population, scores, indexes):
