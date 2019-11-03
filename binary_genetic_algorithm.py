@@ -6,7 +6,10 @@
 import numpy as np
 
 
-def generate(pop_size, chrom_length, threshold=0.5):
+_DEFAULT_RAND_GEN = np.random.Generator(np.random.pcg64.PCG64(None))
+
+
+def generate(pop_size, chrom_length, threshold=0.5, rand_generator=_DEFAULT_RAND_GEN):
     """
     Inputs:
 
@@ -24,6 +27,11 @@ def generate(pop_size, chrom_length, threshold=0.5):
     -- values (from uniform distribution) lower than this number
        translate to True values in chromosomes
 
+    rand_generator
+    -- instance of Numpy Random Generator
+    -- Generator with Numpy default BitGenerator (PCG64)
+       and None as a seed value is used as default
+
 
     Each chromosome is represented as a fixed length 1D numpy array
     with random sequence of Boolean values.
@@ -40,10 +48,10 @@ def generate(pop_size, chrom_length, threshold=0.5):
     if pop_size >= (1 << chrom_length):
         raise ValueError('Population must be smaller than overall unique chromosome sequences.')
 
-    return np.random.uniform(size=(pop_size, chrom_length)) < threshold
+    return rand_generator.uniform(low=0.0, high=1.0, size=(pop_size, chrom_length)) < threshold
 
 
-def select(population, scores, indexes):
+def select(population, scores, indexes, rand_generator=_DEFAULT_RAND_GEN):
     """
     Inputs:
 
@@ -59,6 +67,11 @@ def select(population, scores, indexes):
     -- 1D numpy integer array
     -- indexes of chromosomes in the population (row index)
 
+    rand_generator
+    -- instance of Numpy Random Generator
+    -- Generator with Numpy default BitGenerator (PCG64)
+       and None as a seed value is used as default
+
 
     Selection is based on the roulette wheel method (fitness proportionate selection)
     where probability of a chromosome being selected is related to its fitness value.
@@ -73,14 +86,14 @@ def select(population, scores, indexes):
 
     probabilities = scores / np.sum(scores)
 
-    indexes = np.random.choice(indexes, size=indexes.size, replace=True, p=probabilities)
+    indexes = rand_generator.choice(indexes, size=indexes.size, replace=True, p=probabilities)
 
-    np.random.shuffle(indexes)
+    rand_generator.shuffle(indexes)
 
     return population[indexes]
 
 
-def mutate(population, mut_prob):
+def mutate(population, mut_prob, rand_generator=_DEFAULT_RAND_GEN):
     """
     Inputs:
 
@@ -93,6 +106,11 @@ def mutate(population, mut_prob):
     -- mutation rate
     -- probability that a bit will be inverted
 
+    rand_generator
+    -- instance of Numpy Random Generator
+    -- Generator with Numpy default BitGenerator (PCG64)
+       and None as a seed value is used as default
+
 
     Mutation can occur independently at every bit along each chromosome
     with uniform probability.
@@ -102,13 +120,13 @@ def mutate(population, mut_prob):
     (solution candidates) with randomly altered bits.
     """
 
-    bits_to_mutate = np.random.uniform(size=population.shape) < mut_prob
+    bits_to_mutate = rand_generator.uniform(low=0.0, high=1.0, size=population.shape) < mut_prob
 
     # Change only specific bits in chromosomes, using XOR
     return population ^ bits_to_mutate
 
 
-def crossover(population, crs_prob, bits):
+def crossover(population, crs_prob, bits, rand_generator=_DEFAULT_RAND_GEN):
     """
     Inputs:
 
@@ -127,6 +145,11 @@ def crossover(population, crs_prob, bits):
     -- 1D numpy integer array
     -- indexes of bits in a chromosome (column index)
 
+    rand_generator
+    -- instance of Numpy Random Generator
+    -- Generator with Numpy default BitGenerator (PCG64)
+       and None as a seed value is used as default
+
 
     Commute part of binary sequences between paired chromosomes.
 
@@ -144,12 +167,18 @@ def crossover(population, crs_prob, bits):
     rows >>= 1  # rows //= 2
 
     # Select pairs of chromosomes for which sequences of bits will be exchanged
-    pairs = np.random.uniform(size=(rows, 1)) < crs_prob
+    pairs = rand_generator.uniform(low=0.0, high=1.0, size=(rows, 1)) < crs_prob
 
     # Each chromosome must contribute at least one bit
 
     # Set a single crossover bit for each pair of chromosomes
-    breakpoints = np.random.randint(low=1, high=cols, size=(rows, 1)).astype(np.uint)
+    breakpoints = rand_generator.integers(
+        low=1,
+        high=cols,
+        size=(rows, 1),
+        dtype=bits.dtype,
+        endpoint=False
+    )
 
     # Divide each sequence of bits into two parts
     positions = bits < breakpoints
