@@ -3,13 +3,20 @@
 """Binary genetic algorithm engine"""
 
 
+from typing import Any, Callable, List, Union, Tuple
+
 import numpy as np
 
 
 _DEFAULT_RAND_GEN = np.random.Generator(np.random.pcg64.PCG64(None))
 
 
-def generate(pop_size, chrom_length, threshold=0.5, rand_generator=_DEFAULT_RAND_GEN):
+def generate(
+        pop_size: int,
+        chrom_length: int,
+        threshold: float = 0.5,
+        rand_generator: np.random.Generator = _DEFAULT_RAND_GEN
+) -> np.ndarray:
     """
     Inputs:
 
@@ -51,7 +58,12 @@ def generate(pop_size, chrom_length, threshold=0.5, rand_generator=_DEFAULT_RAND
     return rand_generator.uniform(low=0.0, high=1.0, size=(pop_size, chrom_length)) < threshold
 
 
-def select(population, scores, indexes, rand_generator=_DEFAULT_RAND_GEN):
+def select(
+        population: np.ndarray,
+        scores: np.ndarray,
+        indexes: np.ndarray,
+        rand_generator: np.random.Generator = _DEFAULT_RAND_GEN
+) -> np.ndarray:
     """
     Inputs:
 
@@ -93,7 +105,11 @@ def select(population, scores, indexes, rand_generator=_DEFAULT_RAND_GEN):
     return population[indexes]
 
 
-def mutate(population, mut_prob, rand_generator=_DEFAULT_RAND_GEN):
+def mutate(
+        population: np.ndarray,
+        mut_prob: float,
+        rand_generator: np.random.Generator = _DEFAULT_RAND_GEN
+) -> np.ndarray:
     """
     Inputs:
 
@@ -126,7 +142,12 @@ def mutate(population, mut_prob, rand_generator=_DEFAULT_RAND_GEN):
     return population ^ bits_to_mutate
 
 
-def crossover(population, crs_prob, bits, rand_generator=_DEFAULT_RAND_GEN):
+def crossover(
+        population: np.ndarray,
+        crs_prob: float,
+        bits: np.ndarray,
+        rand_generator: np.random.Generator = _DEFAULT_RAND_GEN
+) -> np.ndarray:
     """
     Inputs:
 
@@ -192,14 +213,16 @@ def crossover(population, crs_prob, bits, rand_generator=_DEFAULT_RAND_GEN):
     ), axis=0)
 
 
-def run(fit_func,
-        crs_prob,
-        mut_prob,
-        chrom_length,
-        pop_size,
-        iterations,
-        fit_args=None,
-        threshold=1.0):
+def run(
+        fit_func: Callable[..., np.ndarray],
+        crs_prob: float,
+        mut_prob: float,
+        chrom_length: int,
+        pop_size: int,
+        iterations: int,
+        fit_args: Union[List[Any], Tuple, None] = None,
+        threshold: float = 1.0
+) -> np.ndarray:
     """
     Inputs:
 
