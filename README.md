@@ -12,4 +12,4 @@ Main features:
 
 More information on genetic algorithms can be found on [wikipedia](https://en.wikipedia.org/wiki/Genetic_algorithm).
 
-#### Requires Python 3, Numpy, and Numba
+Requires Python 3.5+ with external packages installed (listed [here](requirements.txt)).
