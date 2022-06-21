@@ -1,2 +1,2 @@
 pylint==2.4.3
-numpy==1.17.3+mkl
+numpy==1.22.0rc1
